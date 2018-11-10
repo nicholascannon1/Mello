@@ -1,0 +1,3 @@
+/**
+ * Passport configuration file
+ */

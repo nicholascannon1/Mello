@@ -1,0 +1,31 @@
+{
+  "name": "mello",
+  "version": "1.0.0",
+  "description": "A simple Trello clone.",
+  "main": "index.js",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "client": "npm start --prefix client",
+    "server": "nodemon index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicholascannon1/Mello.git"
+  },
+  "author": "Nicholas Cannon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nicholascannon1/Mello/issues"
+  },
+  "homepage": "https://github.com/nicholascannon1/Mello#readme",
+  "dependencies": {
+    "concurrently": "^4.0.1",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "mongoose": "^5.3.11",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0"
+  }
+}
