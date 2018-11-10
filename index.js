@@ -6,6 +6,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const passport = require('passport');
 
 const app = express();
 const port = 8000;
@@ -15,6 +16,7 @@ const port = 8000;
  */
 app.use(morgan('dev'));
 app.use(helmet());
+app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
