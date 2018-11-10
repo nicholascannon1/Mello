@@ -1,2 +1,2 @@
 # Mello
-A Trello clone built with node and react.
+A simple Trello clone built with node and react. 
