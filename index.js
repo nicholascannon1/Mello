@@ -8,8 +8,24 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const passport = require('passport');
 
+/**
+ * Project imports
+ */
+const auth = require('./config/auth');
+const db = require('./config/db');
+
 const app = express();
 const port = 8000;
+
+/** 
+ * Database set up
+ */
+db.connect();
+
+/**
+ * Authentication set up
+ */
+auth(passport);
 
 /**
  * Middleware setup
@@ -23,6 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 /**
  * Mount API routes 
  */
+app.use('/auth/google', require('./routes/auth/auth'));
 
 /** 
  * Error Handlers
