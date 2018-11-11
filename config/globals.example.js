@@ -9,5 +9,8 @@ module.exports = {
     'clientId': '',
     'clientSecret': '',
     'callbackUrl': ''
+  },
+  database: {
+    'URL': ''
   }
 }

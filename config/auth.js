@@ -3,24 +3,30 @@
  */
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const globals = require('../config/globals');
+const User = require('../models/User');
 
 module.exports = (passport) => {
-  passport.serializeUser((user, done) => {
-    done(null, user);
-  });
-
-  passport.deserializeUser((user, done) => {
-    done(null, user);
-  });
-
+  /**
+   * ClientID, ClientSecret and callbackURL are all values from
+   * the Google developer console.
+   */
   passport.use(new GoogleStrategy({
     clientID: globals.google.clientId,
     clientSecret: globals.google.clientSecret,
     callbackURL: globals.google.callbackUrl,
-  }, (token, refreshToken, profile, done) => {
-    return done(null, {
-      profile: profile,
-      token: token
+  }, (accessToken, refreshToken, profile, done) => {
+    // Find user, if no user exists create one
+    User.findOne({ googleId: profile.id }, (err, user) => {
+      if (!user) {
+        User.create({ 
+          googleId: profile.id, 
+          name: profile.displayName 
+        }, (err, user) => {
+          done(err, user);
+        });
+      } else {
+        done(err, user);
+      }
     });
   }));
 }
