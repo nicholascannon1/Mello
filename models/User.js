@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const globals = require('../config/globals');
 
+/**
+ * Schema
+ */
 const userSchema = mongoose.Schema({
   googleId: String,
   name: String

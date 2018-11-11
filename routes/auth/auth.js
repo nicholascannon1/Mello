@@ -30,8 +30,4 @@ router.get('/callback',
   }
 );
 
-router.get('/fail', (req, res) => {
-  res.json({ message: 'Failed to login' });
-});
-
 module.exports = router;

@@ -2,15 +2,19 @@
  * Passport configuration file
  */
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
 const globals = require('../config/globals');
 const User = require('../models/User');
 
 module.exports = (passport) => {
   /**
-   * ClientID, ClientSecret and callbackURL are all values from
-   * the Google developer console.
+   * Google OAuth strategy
    */
   passport.use(new GoogleStrategy({
+    /**
+     * ClientID, ClientSecret and callbackURL are all values from
+     * the Google developer console.
+     */
     clientID: globals.google.clientId,
     clientSecret: globals.google.clientSecret,
     callbackURL: globals.google.callbackUrl,
@@ -29,4 +33,18 @@ module.exports = (passport) => {
       }
     });
   }));
-}
+
+  /**
+   * JWT strategy
+   */
+  passport.use('jwt', new JwtStrategy({
+    jwtFromRequest: function(req) {
+      return req.get('Authorization') || null;
+    },
+    secretOrKey: globals.secret
+  }, (payload, done) => {
+    User.findById(payload.id, (err, user) => { 
+      done(err, user); 
+    });
+  }));
+};
