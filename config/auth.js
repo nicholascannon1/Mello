@@ -19,7 +19,7 @@ module.exports = (passport) => {
     clientSecret: globals.google.clientSecret,
     callbackURL: globals.google.callbackUrl,
   }, (accessToken, refreshToken, profile, done) => {
-    // Find user, if no user exists create one
+    // Find user by google id, if no user exists create one
     User.findOne({ googleId: profile.id }, (err, user) => {
       if (!user) {
         User.create({ 
