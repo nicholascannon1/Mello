@@ -41,6 +41,7 @@ app.use(express.urlencoded({ extended: true }));
  */
 app.use('/auth/google', require('./routes/auth/auth'));
 app.use('/api/list', require('./routes/api/lists'));
+app.use('/api/task', require('./routes/api/tasks'));
 
 /** 
  * Error Handlers

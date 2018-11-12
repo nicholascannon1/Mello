@@ -10,11 +10,10 @@ const passport = require('passport');
 /**
  * Gets all of a users lists
  */
-router.get('/', 
+router.get('/user', 
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     User.findById(req.user._id)
-      .populate('lists')
       .exec((err, user) => {
         if (err) return next(new Error(err));
         res.send({ lists: user.lists });
@@ -45,7 +44,7 @@ router.post('/',
   });
 
 /**
- * Returns a list by ID.
+ * Returns a list by ID. Populates task objects
  * 
  * TODO: Add Mongo ID verification
  */
@@ -55,9 +54,11 @@ router.get('/:id',
     List.findOne({
       user: req.user._id,
       _id: req.params.id
-    }, 'name tasks', (err, list) => {
+    }, 'name tasks')
+    .populate('tasks', '_id task done')
+    .exec((err, list) => {
       if (err) return next(new Error(err));
-      if (!list) return send404(req, res);
+      if (!list) return sendList404(req, res);
       
       res.status(200).json({ list: list });
     });
@@ -76,7 +77,7 @@ router.delete('/:id',
       _id: req.params.id
     }, (err, list) => {
       if (err) return next(new Error(err));
-      if (!list) return send404(req, res);
+      if (!list) return sendList404(req, res);
 
       // Remove list reference from user model
       let index = req.user.lists.indexOf(req.params.id);
@@ -104,14 +105,14 @@ router.patch('/:id',
       }, { name: req.body.name },
       (err, list) => {
         if (err) return next(new Error(err));
-        if (!list) return send404(req, res);
+        if (!list) return sendList404(req, res);
 
         res.status(200).json({ msg: 'Successfully updated list', name: req.body.name });
       });
     }
   });
 
-function send404(req, res) {
+function sendList404(req, res) {
   res.status(404).json({ msg: 'List not found' });
 }
 
