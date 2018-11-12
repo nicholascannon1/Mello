@@ -12,8 +12,13 @@ const passport = require('passport');
  */
 router.get('/', 
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    res.send({ lists: req.user.lists });
+  (req, res, next) => {
+    User.findById(req.user._id)
+      .populate('lists')
+      .exec((err, user) => {
+        if (err) return next(new Error(err));
+        res.send({ lists: user.lists });
+      });
   });
 
 /**
@@ -21,7 +26,7 @@ router.get('/',
  */
 router.post('/', 
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
+  (req, res, next) => {
     List.create({
       name: req.body.name,
       user: req.user._id,
@@ -31,7 +36,10 @@ router.post('/',
       req.user.lists.push(list);
       req.user.save((err, user) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ msg: 'Succesfully created list' });
+        res.status(200).json({ 
+          msg: 'Succesfully created list',
+          id: list._id
+        });
       });
     });
   });
@@ -43,14 +51,68 @@ router.post('/',
  */
 router.get('/:id', 
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
+  (req, res, next) => {
     List.findOne({
       user: req.user._id,
       _id: req.params.id
     }, 'name tasks', (err, list) => {
       if (err) return next(new Error(err));
-      res.status(200).json({ list: list }); 
+      if (!list) return send404(req, res);
+      
+      res.status(200).json({ list: list });
     });
   });
+
+/**
+ * Delete a list
+ * 
+ * TODO: Add mongo id veriffication
+ */
+router.delete('/:id', 
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    List.findOneAndDelete({
+      user: req.user._id,
+      _id: req.params.id
+    }, (err, list) => {
+      if (err) return next(new Error(err));
+      if (!list) return send404(req, res);
+
+      // Remove list reference from user model
+      let index = req.user.lists.indexOf(req.params.id);
+      req.user.lists.splice(index, 1);
+      req.user.save((err, user) => {
+        if (err) return next(new Error(err));
+        res.status(200).json({ msg: 'Successfully deleted', listName: list.name });
+      });
+    });
+  });
+
+/**
+ * Edit list name
+ * 
+ * TODO: Add mongo id verification
+ */
+router.patch('/:id', 
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    // Check for non empty string
+    if (!req.body.name || req.body.name !== '') {
+      List.findOneAndUpdate({
+        _id: req.params.id,
+        user: req.user._id,
+      }, { name: req.body.name },
+      (err, list) => {
+        if (err) return next(new Error(err));
+        if (!list) return send404(req, res);
+
+        res.status(200).json({ msg: 'Successfully updated list', name: req.body.name });
+      });
+    }
+  });
+
+function send404(req, res) {
+  res.status(404).json({ msg: 'List not found' });
+}
 
 module.exports = router;

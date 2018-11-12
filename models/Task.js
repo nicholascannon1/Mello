@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 
 const taskSchema = mongoose.Schema({
-  user: mongoose.Schema.Types.ObjectId,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   task: String,
   done: Boolean,
 });
