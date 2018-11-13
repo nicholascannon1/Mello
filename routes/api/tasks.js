@@ -1,6 +1,6 @@
 /**
  * Contains API routes for dealing with tasks.
- * /api/tasks/
+ * /api/task/
  */
 const router = require('express').Router();
 const Task = require('../../models/Task');
@@ -9,7 +9,11 @@ const List = require('../../models/List');
 const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 
 /**
- * Get a task by ID
+ * Returns a task by ID. This route is protected.
+ * Task must match by task and user id to be returned.
+ * 
+ * ROUTE: /api/task/:id
+ * METHOD: GET
  */
 router.get('/:id',
   verifyMongoId,
@@ -26,34 +30,42 @@ router.get('/:id',
   });
 
 /**
- * Create new task
+ * Creates new task and adds it to a list. Route 
+ * is protected. Task description and list id must 
+ * be sent in body of request.
+ * 
+ * ROUTE: /api/task/
+ * METHOD: POST
  */
 router.post('/', 
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
-    // TODO: check if task text is not empty
     Task.create({
       task: req.body.task,
-      done: false,
       user: req.user._id,
-      list: req.body.listId
+      list: req.body.listId,
+      done: false
     }, (err, task) => {
       if (err) return next(new Error(err));
-      // Add task id to list
-      // TODO: add mongo id check
+      // Update the List object with new task
       List.updateOne({
         _id: req.body.listId,
         user: req.user._id
-      }, { $push: { tasks: task } },
+      }, { $push: { tasks: task } }, // Push new task onto list
       (err, raw) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ msg: 'Successfully created new task', taskId: task._id });
+        res.status(200).json({ msg: 'Created new task', taskId: task._id });
       });
     });
   });
 
 /**
- * Marks a task as completed
+ * Sets done flag of task specified by id to true. This 
+ * route is protected and only the user specified by the 
+ * tasks user attribute can complete the task.
+ * 
+ * ROUTE: /api/task/complete/:id
+ * METHOD: PATCH
  */
 router.patch('/complete/:id', 
   verifyMongoId,
@@ -69,7 +81,12 @@ router.patch('/complete/:id',
   });
 
 /**
- * Edit task
+ * Allows user to edit the task description. This route is
+ * protected and user must own the task to edit it. New task
+ * description must be sent in the body of the request.
+ * 
+ * ROUTE: /api/task/:id
+ * METHOD: PATCH
  */
 router.patch('/:id', 
   verifyMongoId,
@@ -81,12 +98,17 @@ router.patch('/:id',
     }, { task: req.body.task },
     (err, task) => {
       if (err) return next(new Error(err));
-      res.status(200).json({ msg: 'Successfully updated task', taskId: task._id });
+      res.status(200).json({ msg: 'Updated task', taskId: task._id });
     });
   });
 
 /**
- * Delete task
+ * Allows user to delete a task specified by id. This route
+ * is protected and only the owner of the task can delete it.
+ * Once task is deleted it is also removed from the list object.
+ * 
+ * ROUTE: /api/task/:id
+ * METHOD: DELETE
  */
 router.delete('/:id',
   verifyMongoId,
@@ -97,6 +119,7 @@ router.delete('/:id',
       user: req.user._id
     }, (err, task) => {
       if (err) return next(new Error(err));
+      if (!task) return sendTask404(req, res);
 
       // Update list object
       List.findOne({
@@ -110,7 +133,7 @@ router.delete('/:id',
         list.tasks.splice(index, 1);
         list.save((err, updatedList) => {
           if (err) return next(new Error(err));
-          res.status(200).json({ msg: 'Successfully deleted task', task: task.task });
+          res.status(200).json({ msg: 'Deleted task', task: task.task });
         });
       });
     });
