@@ -34,7 +34,6 @@ router.get('/user',
  * METHOD: POST
  */
 router.post('/',
-  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     List.create({

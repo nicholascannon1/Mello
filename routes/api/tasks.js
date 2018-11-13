@@ -79,6 +79,8 @@ router.patch('/complete/:id',
       user: req.user._id
     }, { done: true }, (err, task) => {
       if (err) return next(new Error(err));
+      if (!task) return sendTask404(req, res);
+
       res.status(200).json({ msg: 'Completed task', taskId: task._id });
     });
   });
@@ -101,6 +103,8 @@ router.patch('/:id',
     }, { task: req.body.task },
     (err, task) => {
       if (err) return next(new Error(err));
+      if (!task) return sendTask404(req, res);
+
       res.status(200).json({ msg: 'Updated task', taskId: task._id });
     });
   });
