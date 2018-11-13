@@ -1,6 +1,9 @@
 /**
  * Contains API routes for dealing with tasks.
- * /api/task/
+ * 
+ * TODO: Route to move task to different list object
+ * 
+ * ROUTE: /api/task/
  */
 const router = require('express').Router();
 const Task = require('../../models/Task');
@@ -133,7 +136,7 @@ router.delete('/:id',
         list.tasks.splice(index, 1);
         list.save((err, updatedList) => {
           if (err) return next(new Error(err));
-          res.status(200).json({ msg: 'Deleted task', task: task.task });
+          res.status(200).json({ msg: 'Deleted task', task: task._id });
         });
       });
     });

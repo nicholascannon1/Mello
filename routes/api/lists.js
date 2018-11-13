@@ -9,7 +9,12 @@ const passport = require('passport');
 const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 
 /**
- * Gets all of a users lists
+ * Returns the list ID's for a user. This route is 
+ * protected and will display the lists for the user
+ * specified in the JWT.
+ * 
+ * ROUTE: /api/list/user
+ * METHOD: GET
  */
 router.get('/user', 
   passport.authenticate('jwt', { session: false }),
@@ -22,7 +27,11 @@ router.get('/user',
   });
 
 /**
- * Create a new list
+ * Creates a new empty list. This route is protected and
+ * will add the list to the user specified in the JWT.
+ * 
+ * ROUTE: /api/list/
+ * METHOD: POST
  */
 router.post('/',
   verifyMongoId,
@@ -33,22 +42,23 @@ router.post('/',
       user: req.user._id,
     }, (err, list) => {
       if (err) return next(new Error(err));
-      // Push new list onto user object and save user object
+
+      // Update User object with new list object
       req.user.lists.push(list);
       req.user.save((err, user) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ 
-          msg: 'Succesfully created list',
-          id: list._id
-        });
+        res.status(200).json({ msg: 'Created new list', list: list._id });
       });
     });
   });
 
 /**
- * Returns a list by ID. Populates task objects
+ * Returns list object by ID and populates it with task
+ * objects. This route is protected and will only return lists
+ * that are owned by the user specified in the JWT. 
  * 
- * TODO: Add Mongo ID verification
+ * ROUTE: /api/list/:id
+ * METHOD: GET
  */
 router.get('/:id', 
   verifyMongoId,
@@ -58,7 +68,7 @@ router.get('/:id',
       user: req.user._id,
       _id: req.params.id
     }, 'name tasks')
-    .populate('tasks', '_id task done')
+    .populate('tasks', '_id task done') // Populate with projection
     .exec((err, list) => {
       if (err) return next(new Error(err));
       if (!list) return sendList404(req, res);
@@ -68,9 +78,14 @@ router.get('/:id',
   });
 
 /**
- * Delete a list
+ * Deletes a list specified by ID. This route is protected
+ * and will only delete lists that are owned by the user 
+ * specified in the JWT. 
  * 
- * TODO: Add mongo id veriffication
+ * TODO: Figure out how to delete task objects that are linked to this list
+ * 
+ * ROUTE: /api/list/:id
+ * METHOD: DELETE
  */
 router.delete('/:id', 
   verifyMongoId,
@@ -88,15 +103,18 @@ router.delete('/:id',
       req.user.lists.splice(index, 1);
       req.user.save((err, user) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ msg: 'Successfully deleted', listName: list.name });
+        res.status(200).json({ msg: 'Deleted list', list: list._id });
       });
     });
   });
 
 /**
- * Edit list name
+ * Allows user to edit the name of the list. Route is protected
+ * and will only edit name if the user specified in the JWT
+ * owns the list. Cannot set list name to empty string.
  * 
- * TODO: Add mongo id verification
+ * ROUTE: /api/list/:id
+ * METHOD: PATCH
  */
 router.patch('/:id', 
   verifyMongoId,
@@ -112,11 +130,16 @@ router.patch('/:id',
         if (err) return next(new Error(err));
         if (!list) return sendList404(req, res);
 
-        res.status(200).json({ msg: 'Successfully updated list', name: req.body.name });
+        res.status(200).json({ msg: 'Updated list name', list: list._id });
       });
+    } else {
+      res.status(403).json({ msg: 'Cannot set list name to empty string' });
     }
   });
 
+/**
+ * 404 error handler
+ */
 function sendList404(req, res) {
   res.status(404).json({ msg: 'List not found' });
 }
