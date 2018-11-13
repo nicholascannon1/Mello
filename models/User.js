@@ -10,7 +10,8 @@ const globals = require('../config/globals');
  */
 const userSchema = mongoose.Schema({
   googleId: String,
-  name: String
+  name: String,
+  lists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List'}]
 });
 
 /**

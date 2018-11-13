@@ -16,7 +16,9 @@ router.get('/', passport.authenticate('google',{
 }));
 
 /**
- * Callback URL. /auth/google/callback
+ * Callback URL: /auth/google/callback
+ * Save this callback URL as a constant in /config/globals.js as
+ * it must match the callback URL option in the passport config.
  * 
  * Google sends the user back to this URL with an auth code.
  * If authentication succeeds, primary route function will be 
@@ -26,10 +28,7 @@ router.get('/', passport.authenticate('google',{
 router.get('/callback', 
   passport.authenticate('google', { session: false }),
   (req, res, next) => {
-    User.findOne({ googleId: req.user.googleId }, (err, user) => {
-      if (err || !user) return next(new Error(err || 'User not found'));
-      return res.status(200).json({ token: user.getToken() });
-    });
+    res.status(200).json({ token: req.user.getToken() });
   }
 );
 
