@@ -6,11 +6,13 @@ const router = require('express').Router();
 const Task = require('../../models/Task');
 const passport = require('passport');
 const List = require('../../models/List');
+const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 
 /**
  * Get a task by ID
  */
 router.get('/:id',
+  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     Task.findOne({
@@ -54,6 +56,7 @@ router.post('/',
  * Marks a task as completed
  */
 router.patch('/complete/:id', 
+  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     Task.findOneAndUpdate({
@@ -69,6 +72,7 @@ router.patch('/complete/:id',
  * Edit task
  */
 router.patch('/:id', 
+  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     Task.findOneAndUpdate({
@@ -84,7 +88,8 @@ router.patch('/:id',
 /**
  * Delete task
  */
-router.delete('/:id', 
+router.delete('/:id',
+  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     Task.findOneAndDelete({

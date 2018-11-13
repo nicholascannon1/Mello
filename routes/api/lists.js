@@ -6,6 +6,7 @@ const router = require('express').Router();
 const List = require('../../models/List');
 const User = require('../../models/User');
 const passport = require('passport');
+const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 
 /**
  * Gets all of a users lists
@@ -23,7 +24,8 @@ router.get('/user',
 /**
  * Create a new list
  */
-router.post('/', 
+router.post('/',
+  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     List.create({
@@ -49,6 +51,7 @@ router.post('/',
  * TODO: Add Mongo ID verification
  */
 router.get('/:id', 
+  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     List.findOne({
@@ -70,6 +73,7 @@ router.get('/:id',
  * TODO: Add mongo id veriffication
  */
 router.delete('/:id', 
+  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     List.findOneAndDelete({
@@ -95,6 +99,7 @@ router.delete('/:id',
  * TODO: Add mongo id verification
  */
 router.patch('/:id', 
+  verifyMongoId,
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     // Check for non empty string
