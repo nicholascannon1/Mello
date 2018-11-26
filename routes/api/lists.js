@@ -86,8 +86,6 @@ router.get('/:id',
  * and will only delete lists that are owned by the user 
  * specified in the JWT. 
  * 
- * TODO: Figure out how to delete task objects that are linked to this list
- * 
  * ROUTE: /api/list/:id
  * METHOD: DELETE
  */

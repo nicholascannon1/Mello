@@ -6,11 +6,15 @@
  * ROUTE: /api/task/
  */
 const router = require('express').Router();
-const Task = require('../../models/Task');
 const passport = require('passport');
-const List = require('../../models/List');
 const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 
+/**
+ * Models
+ */
+const List = require('../../models/List');
+const Task = require('../../models/Task');
+ 
 /**
  * Returns a task by ID. This route is protected.
  * Task must match by task and user id to be returned.
