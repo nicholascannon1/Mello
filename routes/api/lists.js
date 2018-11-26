@@ -3,10 +3,15 @@
  * /api/list
  */
 const router = require('express').Router();
-const List = require('../../models/List');
-const User = require('../../models/User');
 const passport = require('passport');
 const verifyMongoId = require('../../helpers/verify').verifyMongoId;
+
+/**
+ * Models 
+ */
+const List = require('../../models/List');
+const User = require('../../models/User');
+const Task = require('../../models/Task');
 
 /**
  * Returns the list ID's for a user. This route is 
@@ -102,7 +107,13 @@ router.delete('/:id',
       req.user.lists.splice(index, 1);
       req.user.save((err, user) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ msg: 'Deleted list', list: list._id });
+
+        // Remove tasks attached to list
+        Task.deleteMany({ list: list._id }, (err) => {
+          if (err) return next(new Error(err));
+
+          res.status(200).json({ msg: 'Deleted list', list: list._id });
+        });
       });
     });
   });
