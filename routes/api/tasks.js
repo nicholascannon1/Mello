@@ -71,6 +71,8 @@ router.post('/',
  * route is protected and only the user specified by the 
  * tasks user attribute can complete the task.
  * 
+ * TODO: Change to toggle?
+ * 
  * ROUTE: /api/task/complete/:id
  * METHOD: PATCH
  */
@@ -139,7 +141,8 @@ router.delete('/:id',
       }, (err, list) => {
         if (err) return next(new Error(err));
         if (!list) return res.status(404).json({ msg: 'Task has invalid list' });
-
+        
+        // Remove task from list
         let index = list.tasks.indexOf(task._id);
         list.tasks.splice(index, 1);
         list.save((err, updatedList) => {
