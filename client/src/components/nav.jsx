@@ -1,41 +1,24 @@
 import React from 'react';
-import { 
-  NavbarBrand, 
-  Navbar,
-  NavbarToggler,
-  Collapse,
-  NavItem,
-  NavLink,
-  Nav } from 'reactstrap';
 
 class MelloNav extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.state = { isOpen: false };
-  }
-
-  toggle() {
-    this.setState({ isOpen: !this.state.isOpen });
-  }
-
   render() {
     return (
-      <Navbar color="light" light expand="md">
-        <NavbarBrand>Mello</NavbarBrand>
-        <NavbarToggler onClick={ this.toggle } />
-        <Collapse isOpen={ this.state.isOpen } navbar>
-          <Nav className="ml-auto" navbar>
-            <NavItem>
-              <NavLink>New List</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink>Logout</NavLink>
-            </NavItem>
-          </Nav>
-        </Collapse>
-      </Navbar>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Mello</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="">New List</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
     );
   }
 }
