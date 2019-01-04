@@ -1,12 +1,73 @@
 import React, { Component } from 'react';
 import MelloNav from './components/nav';
-import { API_HOST } from './config';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import NewList from './pages/NewList';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    // If token present then user is logged in
+    let token = localStorage.getItem('melloToken');
+    this.state = {
+      token: token,
+      loggedIn: token && true
+    }
+
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+
+  login() {
+    this.setState({ 
+      token: localStorage.getItem('melloToken'), 
+      loggedIn: true
+    });
+  }
+
+  logout() {
+    localStorage.removeItem('melloToken');
+    this.setState({token: null, loggedIn: false });
+  }
+
   render() {
     return (
       <div className="App">
-        <MelloNav />
+        <Switch>
+          <Route exact path="/" render={(props) => {
+            if (this.state.loggedIn) {
+              return (
+                <React.Fragment>
+                  <MelloNav handleLogout={this.logout} newListActive={false} />
+                  <Home />
+                </React.Fragment>
+              );
+            } else {
+              return (<Redirect to="/login" />);
+            }
+          }}/>
+          <Route path="/newList" render={(props) => {
+            if (this.state.loggedIn) {
+              return (
+                <React.Fragment>
+                  <MelloNav handleLogout={this.logout} newListActive={true} />
+                  <NewList />
+                </React.Fragment>
+              );
+            } else {
+              return (<Redirect to="/login" />);
+            }
+          }}/>
+          <Route path="/login" render={(props) => {
+            if (this.state.loggedIn) {
+              return (<Redirect to="/"/>);
+            } else { 
+              return (<Login loginHandler={this.login} />);
+            } 
+          }}/>
+        </Switch>
       </div>
     );
   }

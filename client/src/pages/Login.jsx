@@ -15,8 +15,8 @@ export default class Login extends Component {
   componentDidMount() {
     socket.on('melloToken', token => {
       this.popup.close();
-      this.setState({ disabled: '' });
       localStorage.setItem('melloToken', token);
+      this.props.loginHandler(); // Updates the App's state
     });
   }
 
@@ -24,12 +24,12 @@ export default class Login extends Component {
   checkPopup() {
     const check = setInterval(() => {
       const { popup } = this;
-      if (!popup || popup.closed || popup.closed === undefined) {
+      if ((!popup || popup.closed || popup.closed === undefined) && this.state.loggedIn) {
         clearInterval(check);
         this.setState({ disabled: ''});
       }
     }, 1000);
-  }
+  } 
 
   // Launches pop up window
   openPopup() {
