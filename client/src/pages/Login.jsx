@@ -8,18 +8,30 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: ''
+      disabled: '',
     };
   }
 
   componentDidMount() {
     socket.on('melloToken', token => {
       this.popup.close();
-      this.setState({ token });
+      this.setState({ disabled: '' });
       localStorage.setItem('melloToken', token);
-    })
+    });
   }
 
+  // Check if popup window is still open
+  checkPopup() {
+    const check = setInterval(() => {
+      const { popup } = this;
+      if (!popup || popup.closed || popup.closed === undefined) {
+        clearInterval(check);
+        this.setState({ disabled: ''});
+      }
+    }, 1000);
+  }
+
+  // Launches pop up window
   openPopup() {
     const width = 600, height = 600;
     const left = (window.innerWidth / 2) - (width / 2);
@@ -33,15 +45,24 @@ export default class Login extends Component {
     );
   }
 
+  // Starts OAuth process
   startAuth(e) {
-    e.preventDefault();
-    this.popup = this.openPopup();
+    if (!this.state.disabled) {
+      e.preventDefault();
+      this.popup = this.openPopup();
+      this.checkPopup();
+      this.setState({ disabled: 'disabled' });
+    }
   }
 
   render() {
     return (
       <div>
-        <button onClick={this.startAuth.bind(this)}>Login with Google</button>
+        <button 
+          onClick={this.startAuth.bind(this)}
+          className={this.state.disabled}>
+          Login with Google
+        </button>
       </div>
     )
   }
