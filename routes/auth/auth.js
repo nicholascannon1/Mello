@@ -3,7 +3,7 @@
  */
 const router = require('express').Router();
 const passport = require('passport');
-const User = require('../../models/User');
+const ClientURL = require('../../config/globals').ClientURL;
 
 /**
  * Login URL. /auth/google/
@@ -28,7 +28,9 @@ router.get('/', passport.authenticate('google',{
 router.get('/callback', 
   passport.authenticate('google', { session: false }),
   (req, res, next) => {
-    res.status(200).json({ token: req.user.getToken() });
+    //res.status(200).json({ token: req.user.getToken() });
+    const io = req.app.get('io');
+    io.in(req.query.id).emit('melloToken', req.user.getToken());
   }
 );
 

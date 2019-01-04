@@ -7,6 +7,8 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const passport = require('passport');
+const socketio = require('socket.io');
+const http = require('http');
 
 /**
  * Project imports
@@ -15,6 +17,7 @@ const auth = require('./config/auth');
 const db = require('./config/db');
 
 const app = express();
+const server = http.createServer(app);
 const port = 8000;
 
 /** 
@@ -35,6 +38,12 @@ app.use(helmet());
 app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+/**
+ * Socket.io set up
+ */
+const io = socketio(server);
+app.set('io', io);
 
 /**
  * Enable CORS
@@ -68,4 +77,4 @@ if (app.get('env') === 'development') {
   });
 }
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+server.listen(port, () => console.log(`Listening on port ${port}`));
