@@ -16,6 +16,7 @@ export default class Login extends Component {
     socket.on('melloToken', token => {
       this.popup.close();
       localStorage.setItem('melloToken', token);
+      socket.close();
       this.props.loginHandler(); // Updates the App's state
     });
   }
