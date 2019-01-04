@@ -20,6 +20,14 @@ router.get('/user',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     User.findById(req.user._id)
+      .populate({
+        path: 'lists',
+        select: '_id tasks name',
+        populate: {
+          path: 'tasks',
+          select: '_id task done'
+        }
+      })
       .exec((err, user) => {
         if (err) return next(new Error(err));
         res.send({ lists: user.lists });

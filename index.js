@@ -10,6 +10,7 @@ const passport = require('passport');
 const socketio = require('socket.io');
 const http = require('http');
 const session = require('express-session');
+const cors = require('cors');
 
 /**
  * Project imports
@@ -19,7 +20,6 @@ const db = require('./config/db');
 const secret = require('./config/globals').secret;
 
 const app = express();
-const server = http.createServer(app);
 const port = 8000;
 
 /** 
@@ -45,21 +45,14 @@ app.use(session({
   resave: true, 
   saveUninitialized: true
 }));
+app.use(cors());
 
 /**
  * Socket.io set up
  */
+const server = http.createServer(app);
 const io = socketio(server);
 app.set('io', io);
-
-/**
- * Enable CORS
- */
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
 /**
  * Mount API routes 

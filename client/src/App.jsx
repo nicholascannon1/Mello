@@ -41,7 +41,7 @@ class App extends Component {
               return (
                 <React.Fragment>
                   <MelloNav handleLogout={this.logout} newListActive={false} />
-                  <Home />
+                  <Home token={this.state.token} />
                 </React.Fragment>
               );
             } else {
@@ -53,7 +53,7 @@ class App extends Component {
               return (
                 <React.Fragment>
                   <MelloNav handleLogout={this.logout} newListActive={true} />
-                  <NewList />
+                  <NewList token={this.state.token} />
                 </React.Fragment>
               );
             } else {

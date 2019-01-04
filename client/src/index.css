@@ -1,0 +1,14 @@
+.card {
+  margin: 1%;
+  width: 300px;
+}
+
+.card-title {
+  padding: 0;
+  margin: 0;
+  display: inline;
+}
+
+.card-footer {
+  background-color: #fff;
+}
