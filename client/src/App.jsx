@@ -7,7 +7,6 @@ class App extends Component {
     return (
       <div className="App">
         <MelloNav />
-        <a href={API_HOST+'/auth/google'}>Login with Google</a>
       </div>
     );
   }

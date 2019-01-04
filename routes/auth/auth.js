@@ -6,12 +6,22 @@ const passport = require('passport');
 const ClientURL = require('../../config/globals').ClientURL;
 
 /**
+ * Middleware to attach socket id to session. Socket id must be
+ * in query string. Must attach to session so that the callback route
+ * can access the same id.
+ */
+function addSocketId(req, res, next) {
+  req.session.socketId = req.query.socketId;
+  next();
+}
+
+/**
  * Login URL. /auth/google/
  * 
  * Sends the user to googles login auth service. This redirect 
  * prompts the user to allow access.
  */
-router.get('/', passport.authenticate('google',{ 
+router.get('/', addSocketId, passport.authenticate('google',{ 
   scope: ['email', 'profile'], session: false
 }));
 
@@ -28,9 +38,8 @@ router.get('/', passport.authenticate('google',{
 router.get('/callback', 
   passport.authenticate('google', { session: false }),
   (req, res, next) => {
-    //res.status(200).json({ token: req.user.getToken() });
     const io = req.app.get('io');
-    io.in(req.query.id).emit('melloToken', req.user.getToken());
+    io.in(req.session.socketId).emit('melloToken', req.user.getToken());
   }
 );
 

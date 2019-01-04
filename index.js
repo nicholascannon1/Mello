@@ -9,12 +9,14 @@ const helmet = require('helmet');
 const passport = require('passport');
 const socketio = require('socket.io');
 const http = require('http');
+const session = require('express-session');
 
 /**
  * Project imports
  */
 const auth = require('./config/auth');
 const db = require('./config/db');
+const secret = require('./config/globals').secret;
 
 const app = express();
 const server = http.createServer(app);
@@ -38,6 +40,11 @@ app.use(helmet());
 app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: secret,
+  resave: true, 
+  saveUninitialized: true
+}));
 
 /**
  * Socket.io set up
