@@ -3,7 +3,7 @@ import React from 'react';
 class Task extends React.Component {
   render() {
     return (
-      <p>Task</p>
+      <li className="list-group-item">{this.props.task}</li>
     );
   }
 }

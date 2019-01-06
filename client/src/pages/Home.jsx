@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { API_HOST } from '../config';
+import List from '../components/List';
 
 export default class Home extends Component {
   constructor(props) {
@@ -18,40 +19,15 @@ export default class Home extends Component {
       .then(res => res.json())
       .then(data => {
         this.setState({ lists: data.lists });
-      })
-  }
-
-  buildTask(tasks) {
-    return tasks.map(task => {
-      if (!task.done) {
-        return (<li key={task._id} className="list-group-item">{task.task}</li>);
-      } 
-    });
-  }
-
-  buildListCard(list) {
-    return (
-      <div key={list._id} className="card">
-        <div class="card-header">
-          <h5 className="card-title">{list.name}</h5>
-          <button type="button" class="close">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div className="card-body">
-          <ul className="list-group list-group-flush">
-            {this.buildTask(list.tasks)}
-          </ul>
-        </div>
-        <div className="card-footer">
-          <button class="btn btn-primary">New Task</button>
-        </div>
-      </div>
-    );
+      });
   }
 
   render() {
-    const lists = this.state.lists.map(list => this.buildListCard(list));
+    //const lists = this.state.lists.map(list => this.buildListCard(list));
+
+    const lists = this.state.lists.map(list => {
+      return (<List key={list._id} name={list.name} tasks={list.tasks} />);
+    });
 
     return (
       <div className="container-fluid">
