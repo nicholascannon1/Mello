@@ -21,6 +21,30 @@ function deleteList(id) {
   });
 }
 
+function addList(listName) {
+  const payload = { name: listName };
+
+  fetch(API_HOST+'/api/list/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: { 
+      'Authorization': this.props.token,
+      'content-type': 'application/json'
+    },
+  })
+  .then(res => {
+    if (res.status === 200) {
+      return res.json();
+    }
+  })
+  .then(data => {
+    // Add new list to existing array of lists
+    const newLists = this.state.lists.concat([data.list]);
+    this.setState({ lists: newLists });
+  });
+}
+
 export { 
-  deleteList
+  deleteList,
+  addList
 };

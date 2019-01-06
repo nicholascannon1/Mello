@@ -45,6 +45,7 @@ router.get('/user',
 router.post('/',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
+    console.log(req.body);
     List.create({
       name: req.body.name,
       user: req.user._id,
@@ -55,7 +56,10 @@ router.post('/',
       req.user.lists.push(list);
       req.user.save((err, user) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ msg: 'Created new list', list: list._id });
+
+        // Create projection of new list and return it
+        newList = { _id: list._id, tasks: list.tasks, name: list.name };
+        res.status(200).json({ msg: 'Created new list', list: newList });
       });
     });
   });

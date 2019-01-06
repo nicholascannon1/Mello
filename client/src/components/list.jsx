@@ -17,7 +17,6 @@ class List extends React.Component {
           </button>
         </div>
         <div className="card-body">
-          <p>ID:{this.props.id}</p>
           <ul className="list-group list-group-flush">
             {tasks}
           </ul>

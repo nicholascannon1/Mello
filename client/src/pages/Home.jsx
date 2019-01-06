@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { API_HOST } from '../config';
 import List from '../components/List';
+import NewList from '../components/NewList';
 import * as ListHandler from '../handlers/list';
 
 export default class Home extends Component {
@@ -24,8 +25,6 @@ export default class Home extends Component {
   }
 
   render() {
-    //const lists = this.state.lists.map(list => this.buildListCard(list));
-
     const lists = this.state.lists.map(list => {
       return (
         <List 
@@ -42,6 +41,7 @@ export default class Home extends Component {
       <div className="container-fluid">
         <div className="row justify-content-center">
           {lists}
+          <NewList addList={ListHandler.addList.bind(this)} />
         </div>
       </div>
     )
