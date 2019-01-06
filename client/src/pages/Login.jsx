@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import { API_HOST } from '../config';
 
-const socket = io(API_HOST);
+var socket;
 
 export default class Login extends Component {
   constructor(props) {
@@ -10,6 +10,7 @@ export default class Login extends Component {
     this.state = {
       disabled: '',
     };
+    socket = io(API_HOST);
   }
 
   componentDidMount() {
@@ -25,7 +26,7 @@ export default class Login extends Component {
   checkPopup() {
     const check = setInterval(() => {
       const { popup } = this;
-      if ((!popup || popup.closed || popup.closed === undefined) && this.state.loggedIn) {
+      if (!popup || popup.closed || popup.closed === undefined) {
         clearInterval(check);
         this.setState({ disabled: ''});
       }
