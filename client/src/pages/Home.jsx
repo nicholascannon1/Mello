@@ -3,6 +3,7 @@ import { API_HOST } from '../config';
 import List from '../components/List';
 import NewList from '../components/NewList';
 import * as ListHandler from '../handlers/list';
+import * as TaskHandler from '../handlers/task';
 
 export default class Home extends Component {
   constructor(props) {
@@ -33,6 +34,7 @@ export default class Home extends Component {
           name={list.name} 
           tasks={list.tasks}
           handleDelete={ListHandler.deleteList.bind(this)}
+          newTask={TaskHandler.newTask.bind(this)}
         />
       );
     });

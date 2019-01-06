@@ -34,9 +34,6 @@ class NewList extends React.Component {
             onChange={this.listNameChange.bind(this)}
             required
           />
-          <button type="button" className="close" disabled>
-            <span>&times;</span>
-          </button>
         </div>
         <div className="card-body">
           <ul className="list-group list-group-flush">

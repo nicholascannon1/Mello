@@ -1,8 +1,6 @@
 /**
  * Contains API routes for dealing with tasks.
  * 
- * TODO: Route to move task to different list object
- * 
  * ROUTE: /api/task/
  */
 const router = require('express').Router();
@@ -57,7 +55,10 @@ router.post('/',
       }, { $push: { tasks: task } }, // Push new task onto list
       (err, raw) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ msg: 'Created new task', taskId: task._id });
+
+        // Create projection of new task
+        const newTask = { _id: task._id, task: task.task, done: task.done };
+        res.status(200).json({ msg: 'Created new task', task: newTask });
       });
     });
   });
