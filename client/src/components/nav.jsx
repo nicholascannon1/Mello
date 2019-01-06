@@ -13,22 +13,12 @@ class MelloNav extends React.Component {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link className={this.isNewListActive()} to="/newList">New List</Link>
-            </li>
-            <li className="nav-item">
               <Link className="nav-link" onClick={this.props.handleLogout} to="/login">Logout</Link>
             </li>
           </ul>
         </div>
       </nav>
     );
-  }
-
-  isNewListActive() {
-    if (this.props.newListActive) {
-      return 'nav-link active';
-    }
-    return 'nav-link';
   }
 }
 

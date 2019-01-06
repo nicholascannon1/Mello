@@ -16,11 +16,10 @@ class NewList extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     
-    if (this.state.listName === '') {
-      alert('Please enter a name');
+    if (this.state.listName !== '') {
+      this.props.addList(this.state.listName);
+      this.setState({ listName: '' }); 
     }
-    this.props.addList(this.state.listName);
-    this.setState({ listName: '' });
   }
 
   render() {
@@ -28,11 +27,12 @@ class NewList extends React.Component {
       <form className="card" id="newListForm" onSubmit={this.handleSubmit.bind(this)}>
         <div className="card-header">
           <input type="text" 
-            className="form-control" 
+            className="form-control form-control-sm" 
             id="newListName"
             placeholder="New list"
             value={this.state.listName}
             onChange={this.listNameChange.bind(this)}
+            required
           />
           <button type="button" className="close" disabled>
             <span>&times;</span>
@@ -48,8 +48,6 @@ class NewList extends React.Component {
       </form>
     );
   }
-
-  
 }
 
 export default NewList;

@@ -21,6 +21,9 @@ function deleteList(id) {
   });
 }
 
+/**
+ * Adds new list with name
+ */
 function addList(listName) {
   const payload = { name: listName };
 
@@ -29,8 +32,8 @@ function addList(listName) {
     body: JSON.stringify(payload),
     headers: { 
       'Authorization': this.props.token,
-      'content-type': 'application/json'
-    },
+      'content-type': 'application/json' // Must set content type when
+    },                                   // sending payload
   })
   .then(res => {
     if (res.status === 200) {

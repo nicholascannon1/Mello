@@ -3,7 +3,6 @@ import MelloNav from './components/nav';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
-import NewList from './pages/NewList';
 
 class App extends Component {
   constructor(props) {
@@ -42,18 +41,6 @@ class App extends Component {
                 <React.Fragment>
                   <MelloNav handleLogout={this.logout} newListActive={false} />
                   <Home token={this.state.token} />
-                </React.Fragment>
-              );
-            } else {
-              return (<Redirect to="/login" />);
-            }
-          }}/>
-          <Route path="/newList" render={(props) => {
-            if (this.state.loggedIn) {
-              return (
-                <React.Fragment>
-                  <MelloNav handleLogout={this.logout} newListActive={true} />
-                  <NewList token={this.state.token} />
                 </React.Fragment>
               );
             } else {
