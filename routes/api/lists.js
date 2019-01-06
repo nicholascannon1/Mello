@@ -5,6 +5,7 @@
 const router = require('express').Router();
 const List = require('../../models/List');
 const User = require('../../models/User');
+const Task = require('../../models/Task');
 const passport = require('passport');
 const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 
@@ -89,8 +90,6 @@ router.get('/:id',
  * and will only delete lists that are owned by the user 
  * specified in the JWT. 
  * 
- * TODO: Figure out how to delete task objects that are linked to this list
- * 
  * ROUTE: /api/list/:id
  * METHOD: DELETE
  */
@@ -110,7 +109,12 @@ router.delete('/:id',
       req.user.lists.splice(index, 1);
       req.user.save((err, user) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ msg: 'Deleted list', list: list._id });
+
+        // Delete Tasks from List
+        Task.deleteMany({ user: req.user._id, list: req.params.id }, (err, task) => {
+          if (err) return next(new Error(err));
+          res.status(200).json({ msg: 'Deleted list', list: list._id });
+        });
       });
     });
   });

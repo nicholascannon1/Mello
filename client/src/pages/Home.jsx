@@ -22,11 +22,36 @@ export default class Home extends Component {
       });
   }
 
+  /**
+   * Deletes a list by ID.
+   */
+  handleListDelete(id) {
+    fetch(API_HOST+'/api/list/'+id, {
+      headers: { 'Authorization': this.props.token },
+      method: 'DELETE'
+    })
+    .then(res => {
+      if (res.status === 200) {
+        this.setState({
+          lists: this.state.lists.filter(list => id !== list._id)
+        })
+      }
+    });
+  }
+
   render() {
     //const lists = this.state.lists.map(list => this.buildListCard(list));
 
     const lists = this.state.lists.map(list => {
-      return (<List key={list._id} name={list.name} tasks={list.tasks} />);
+      return (
+        <List 
+          key={list._id} 
+          id={list._id} 
+          name={list.name} 
+          tasks={list.tasks}
+          handleDelete={this.handleListDelete.bind(this)}
+        />
+      );
     });
 
     return (

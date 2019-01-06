@@ -11,11 +11,13 @@ class List extends React.Component {
       <div className="card">
         <div className="card-header">
           <h5 className="card-title">{this.props.name}</h5>
-          <button type="button" className="close">
+          <button type="button" className="close" 
+            onClick={() => this.props.handleDelete(this.props.id)}>
             <span>&times;</span>
           </button>
         </div>
         <div className="card-body">
+          <p>ID:{this.props.id}</p>
           <ul className="list-group list-group-flush">
             {tasks}
           </ul>
