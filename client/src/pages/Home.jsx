@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { API_HOST } from '../config';
 import List from '../components/List';
+import * as ListHandler from '../handlers/list';
 
 export default class Home extends Component {
   constructor(props) {
@@ -22,23 +23,6 @@ export default class Home extends Component {
       });
   }
 
-  /**
-   * Deletes a list by ID.
-   */
-  handleListDelete(id) {
-    fetch(API_HOST+'/api/list/'+id, {
-      headers: { 'Authorization': this.props.token },
-      method: 'DELETE'
-    })
-    .then(res => {
-      if (res.status === 200) {
-        this.setState({
-          lists: this.state.lists.filter(list => id !== list._id)
-        })
-      }
-    });
-  }
-
   render() {
     //const lists = this.state.lists.map(list => this.buildListCard(list));
 
@@ -49,7 +33,7 @@ export default class Home extends Component {
           id={list._id} 
           name={list.name} 
           tasks={list.tasks}
-          handleDelete={this.handleListDelete.bind(this)}
+          handleDelete={ListHandler.deleteList.bind(this)}
         />
       );
     });
