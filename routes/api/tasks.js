@@ -64,32 +64,10 @@ router.post('/',
   });
 
 /**
- * Sets done flag of task specified by id to true. This 
- * route is protected and only the user specified by the 
- * tasks user attribute can complete the task.
- * 
- * ROUTE: /api/task/complete/:id
- * METHOD: PATCH
- */
-router.patch('/complete/:id', 
-  verifyMongoId,
-  passport.authenticate('jwt', { session: false }),
-  (req, res, next) => {
-    Task.findOneAndUpdate({
-      _id: req.params.id,
-      user: req.user._id
-    }, { done: true }, (err, task) => {
-      if (err) return next(new Error(err));
-      if (!task) return sendTask404(req, res);
-
-      res.status(200).json({ msg: 'Completed task', taskId: task._id });
-    });
-  });
-
-/**
- * Allows user to edit the task description. This route is
+ * Allows user to edit the task. This route is
  * protected and user must own the task to edit it. New task
- * description must be sent in the body of the request.
+ * description and done value must be sent in the body of the 
+ * request.
  * 
  * ROUTE: /api/task/:id
  * METHOD: PATCH
@@ -101,12 +79,15 @@ router.patch('/:id',
     Task.findOneAndUpdate({
       _id: req.params.id,
       user: req.user._id,
-    }, { task: req.body.task },
+    }, { task: req.body.task, done: req.body.done },
+    {new: true}, // Passes updated document into callback
     (err, task) => {
       if (err) return next(new Error(err));
       if (!task) return sendTask404(req, res);
-
-      res.status(200).json({ msg: 'Updated task', taskId: task._id });
+      
+      // Create projection of new task
+      const newTask = { _id: task._id, task: task.task, done: task.done };
+      res.status(200).json({ msg: 'Updated task', task: newTask, listId: task.list });
     });
   });
 
@@ -141,7 +122,7 @@ router.delete('/:id',
         list.tasks.splice(index, 1);
         list.save((err, updatedList) => {
           if (err) return next(new Error(err));
-          res.status(200).json({ msg: 'Deleted task', task: task._id });
+          res.status(200).json({ msg: 'Deleted task', taskId: task._id, listId: task.list });
         });
       });
     });

@@ -141,6 +141,7 @@ router.patch('/:id',
         _id: req.params.id,
         user: req.user._id,
       }, { name: req.body.name },
+      { new: true },
       (err, list) => {
         if (err) return next(new Error(err));
         if (!list) return sendList404(req, res);

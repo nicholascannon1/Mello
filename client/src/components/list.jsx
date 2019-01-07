@@ -21,7 +21,6 @@ class List extends React.Component {
     if (this.state.newTaskText !== '') {
       this.setState({ newTaskText: '' });
       $('#newTaskModal'+this.props.id).modal('toggle'); // Closes modal
-      console.log(this.state);
       this.props.newTask(this.state.newTaskText, this.state.id);
     }
   }
@@ -34,7 +33,13 @@ class List extends React.Component {
 
   render() {
     const tasks = this.props.tasks.map(task => {
-      return (<Task key={task._id} id={task._id} task={task.task} done={task.done} />);
+      return (<Task 
+                key={task._id} 
+                id={task._id} 
+                task={task.task} done={task.done} 
+                editTask={this.props.editTask}
+                deleteTask={this.props.deleteTask}
+              />);
     });
 
     return (

@@ -29,12 +29,19 @@ export default class Home extends Component {
     const lists = this.state.lists.map(list => {
       return (
         <List 
+          /* List Object attributes */
           key={list._id} 
           id={list._id} 
           name={list.name} 
           tasks={list.tasks}
+
+          /* List Methods */
           handleDelete={ListHandler.deleteList.bind(this)}
+
+          /* Task Methods */
           newTask={TaskHandler.newTask.bind(this)}
+          editTask={TaskHandler.editTask.bind(this)}
+          deleteTask={TaskHandler.deleteTask.bind(this)}
         />
       );
     });
