@@ -7,7 +7,8 @@ class List extends React.Component {
     super(props);
 
     this.state = {
-      newTaskText: ''
+      newTaskText: '',
+      id: this.props.id
     };
   }
 
@@ -19,8 +20,9 @@ class List extends React.Component {
 
     if (this.state.newTaskText !== '') {
       this.setState({ newTaskText: '' });
-      $('#newTaskModal').modal('toggle'); // Closes modal
-      this.props.newTask(this.state.newTaskText, this.props.id);
+      $('#newTaskModal'+this.props.id).modal('toggle'); // Closes modal
+      console.log(this.state);
+      this.props.newTask(this.state.newTaskText, this.state.id);
     }
   }
 
@@ -51,13 +53,14 @@ class List extends React.Component {
             </ul>
           </div>
           <div className="card-footer">
-            <button className="btn btn-primary" data-toggle="modal" data-target="#newTaskModal">
+            <button className="btn btn-primary" data-toggle="modal" 
+              data-target={"#newTaskModal"+this.props.id}>
               New Task
             </button>
           </div>
         </div>
         {/* NEW TASK MODAL */}
-        <div className="modal fade" id="newTaskModal" tabIndex="-1" role="dialog">
+        <div className="modal fade" id={"newTaskModal"+this.props.id} tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
