@@ -117,7 +117,7 @@ router.delete('/:id',
       }, (err, list) => {
         if (err) return next(new Error(err));
         if (!list) return res.status(404).json({ msg: 'Task has invalid list' });
-
+        
         let index = list.tasks.indexOf(task._id);
         list.tasks.splice(index, 1);
         list.save((err, updatedList) => {
