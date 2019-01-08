@@ -63,3 +63,4 @@ typings/
 
 # My ignores
 config/globals.js
+client/src/config.js

@@ -7,12 +7,17 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const passport = require('passport');
+const socketio = require('socket.io');
+const http = require('http');
+const session = require('express-session');
+const cors = require('cors');
 
 /**
  * Project imports
  */
 const auth = require('./config/auth');
 const db = require('./config/db');
+const secret = require('./config/globals').secret;
 
 const app = express();
 const port = 8000;
@@ -35,6 +40,19 @@ app.use(helmet());
 app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: secret,
+  resave: true, 
+  saveUninitialized: true
+}));
+app.use(cors());
+
+/**
+ * Socket.io set up
+ */
+const server = http.createServer(app);
+const io = socketio(server);
+app.set('io', io);
 
 /**
  * Mount API routes 
@@ -59,4 +77,4 @@ if (app.get('env') === 'development') {
   });
 }
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+server.listen(port, () => console.log(`Listening on port ${port}`));

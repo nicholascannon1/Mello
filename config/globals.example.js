@@ -12,5 +12,7 @@ module.exports = {
   },
   database: {
     'URL': ''
-  }
+  },
+  secret: '',
+  ClientURL: ''
 }

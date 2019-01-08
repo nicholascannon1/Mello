@@ -3,6 +3,9 @@
  * /api/list
  */
 const router = require('express').Router();
+const List = require('../../models/List');
+const User = require('../../models/User');
+const Task = require('../../models/Task');
 const passport = require('passport');
 const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 
@@ -25,6 +28,14 @@ router.get('/user',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     User.findById(req.user._id)
+      .populate({
+        path: 'lists',
+        select: '_id tasks name showDone',
+        populate: {
+          path: 'tasks',
+          select: '_id task done'
+        }
+      })
       .exec((err, user) => {
         if (err) return next(new Error(err));
         res.send({ lists: user.lists });
@@ -41,6 +52,7 @@ router.get('/user',
 router.post('/',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
+    console.log(req.body);
     List.create({
       name: req.body.name,
       user: req.user._id,
@@ -51,7 +63,10 @@ router.post('/',
       req.user.lists.push(list);
       req.user.save((err, user) => {
         if (err) return next(new Error(err));
-        res.status(200).json({ msg: 'Created new list', list: list._id });
+
+        // Create projection of new list and return it
+        newList = { _id: list._id, tasks: list.tasks, name: list.name, showDone: list.showDone };
+        res.status(200).json({ msg: 'Created new list', list: newList });
       });
     });
   });
@@ -106,10 +121,10 @@ router.delete('/:id',
       req.user.save((err, user) => {
         if (err) return next(new Error(err));
 
-        // Remove tasks attached to list
-        Task.deleteMany({ list: list._id }, (err) => {
+        // Delete Tasks from List
+        Task.deleteMany({ user: req.user._id, list: req.params.id }, (err, task) => {
           if (err) return next(new Error(err));
-
+          
           res.status(200).json({ msg: 'Deleted list', list: list._id });
         });
       });
@@ -117,7 +132,7 @@ router.delete('/:id',
   });
 
 /**
- * Allows user to edit the name of the list. Route is protected
+ * Allows user to edit a list. Route is protected
  * and will only edit name if the user specified in the JWT
  * owns the list. Cannot set list name to empty string.
  * 
@@ -129,16 +144,17 @@ router.patch('/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     // Check for non empty string
-    if (!req.body.name || req.body.name !== '') {
+    if (!req.body.name || req.body.name !== '' || req.body.showDone !== undefined) {
       List.findOneAndUpdate({
         _id: req.params.id,
         user: req.user._id,
-      }, { name: req.body.name },
+      }, { name: req.body.name, showDone: req.body.showDone }, { new: true },
       (err, list) => {
         if (err) return next(new Error(err));
         if (!list) return sendList404(req, res);
-
-        res.status(200).json({ msg: 'Updated list name', list: list._id });
+        
+        newList = { _id: list._id, tasks: list.tasks, name: list.name, showDone: list.showDone };
+        res.status(200).json({ msg: 'Updated list', list: newList });
       });
     } else {
       res.status(403).json({ msg: 'Cannot set list name to empty string' });

@@ -3,14 +3,27 @@
  */
 const router = require('express').Router();
 const passport = require('passport');
+const ClientURL = require('../../config/globals').ClientURL;
 
 /**
- * Login URL: /auth/google/
+ * Middleware to attach socket id to session. Socket id must be
+ * in query string. Must attach to session so that the callback route
+ * can access the same id.
+ */
+function addSocketId(req, res, next) {
+  req.session.socketId = req.query.socketId;
+  next();
+}
+
+/**
+ * Login URL. /auth/google/?socketId=...
  * 
  * Sends the user to googles login auth service. This redirect 
- * prompts the user to allow access.
+ * prompts the user to allow access. Client will call this with a
+ * socketId which will then be stored in req.session using the 'addSocketId'
+ * middleware.
  */
-router.get('/', passport.authenticate('google',{ 
+router.get('/', addSocketId, passport.authenticate('google',{ 
   scope: ['email', 'profile'], session: false
 }));
 
@@ -21,12 +34,17 @@ router.get('/', passport.authenticate('google',{
  * 
  * Google sends the user back to this URL with an auth code.
  * If authentication succeeds, primary route function will be 
- * called. In this case we generate a JWT for the user logging in.
+ * called. In this case we search the DB for the user matching the 
+ * google id given to us by google and generate a JWT for that user.
+ * 
+ * After generating a JWT emit an event that the client is listening for using
+ * the socketId that was stored in the session by the addSocketId middleware.
  */
 router.get('/callback', 
   passport.authenticate('google', { session: false }),
   (req, res, next) => {
-    res.status(200).json({ token: req.user.getToken() });
+    const io = req.app.get('io');
+    io.in(req.session.socketId).emit('melloToken', req.user.getToken());
   }
 );
 

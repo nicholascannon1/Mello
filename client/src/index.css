@@ -1,0 +1,91 @@
+html, body, #root, .App {
+  height: 100%;
+  background-color: #2495ff;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Nav */
+.navbar-brand {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5em;
+  color: #fff;
+}
+
+.navbar {
+  padding-bottom: 0;
+  padding-top: 0;
+  background-color: #1e7bd3;
+}
+
+.nav-link {
+  color: #fff;
+}
+
+/* Home Styling */
+.card {
+  margin: 1%;
+  width: 300px;
+  height: 400px;
+}
+
+.list-group-item-action {
+  cursor: pointer;
+}
+
+.card-title {
+  padding: 0;
+  display: inline;
+  cursor: pointer;
+}
+
+.card-footer {
+  background-color: #fff;
+}
+
+.card-body {
+  overflow-y: auto;
+}
+
+/* NewList component styling */
+#newListName {
+  height: 26px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* footer */
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+.footer a {
+  color: #fff;
+}
+
+/* Login page */
+#loginPage {
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#loginWithGoogle {
+  color: #fff;
+  background-color: #000;
+}
+
+#loginWithGoogle:hover {
+  background-color: #4e4e4e;
+}
+
+#bigBrand {
+  font-family: 'Caveat', cursive;
+  font-size: 8em;
+  color: #fff;
+}
