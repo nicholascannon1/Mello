@@ -1,6 +1,7 @@
 html, body, #root, .App {
   height: 100%;
   background-color: #2495ff;
+  font-family: 'Roboto', sans-serif;
 }
 
 /* Nav */
@@ -41,9 +42,13 @@ html, body, #root, .App {
   background-color: #fff;
 }
 
+.card-body {
+  overflow-y: auto;
+}
+
 /* NewList component styling */
 #newListName {
-  height: 25px;
+  height: 26px;
   margin-top: 0;
   margin-bottom: 0;
 }
