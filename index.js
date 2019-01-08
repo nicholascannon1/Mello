@@ -70,7 +70,7 @@ if (app.get('env') === 'development') {
     res.json({ message: err.message, err: err });
   });
 } else {
-  // No stack traces leaked to user
+  // No stack traces leaked in production
   app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.json({ message: err.message });

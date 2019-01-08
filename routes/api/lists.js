@@ -10,6 +10,13 @@ const passport = require('passport');
 const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 
 /**
+ * Models 
+ */
+const List = require('../../models/List');
+const User = require('../../models/User');
+const Task = require('../../models/Task');
+
+/**
  * Returns the list ID's for a user. This route is 
  * protected and will display the lists for the user
  * specified in the JWT.
@@ -117,6 +124,7 @@ router.delete('/:id',
         // Delete Tasks from List
         Task.deleteMany({ user: req.user._id, list: req.params.id }, (err, task) => {
           if (err) return next(new Error(err));
+          
           res.status(200).json({ msg: 'Deleted list', list: list._id });
         });
       });
