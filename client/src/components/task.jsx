@@ -70,7 +70,7 @@ class Task extends React.Component {
                     <label className="form-check-label">Completed</label>
                   </div>
                   <button className="btn btn-primary mr-2" type="submit">Save task</button>
-                  <button className="btn btn-danger" onClick={this.handleDelete.bind(this)}>
+                  <button className="btn btn-danger" type="button" onClick={this.handleDelete.bind(this)}>
                     Delete Task
                   </button>
                 </form>
