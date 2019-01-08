@@ -59,12 +59,16 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div>
-        <button 
-          onClick={this.startAuth.bind(this)}
-          className={this.state.disabled}>
-          Login with Google
-        </button>
+      <div id="loginPage">
+        <div className="text-center">
+          <h1 id="bigBrand">Mello</h1>
+          <button 
+            id="loginWithGoogle"
+            onClick={this.startAuth.bind(this)}
+            className={"btn" + this.state.disabled}>
+            Login with Google
+          </button>
+        </div>
       </div>
     )
   }

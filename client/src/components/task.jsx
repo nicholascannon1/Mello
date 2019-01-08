@@ -70,6 +70,7 @@ class Task extends React.Component {
           onClick={this.openTaskModal.bind(this)}>
           {this.props.task}
         </button>
+        {/* Task Modal */}
         <div className="modal fade" id={"taskModal"+this.props.id} tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">
             <div className="modal-content">

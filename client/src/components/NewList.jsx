@@ -27,7 +27,7 @@ class NewList extends React.Component {
       <form className="card" id="newListForm" onSubmit={this.handleSubmit.bind(this)}>
         <div className="card-header">
           <input type="text" 
-            className="form-control form-control-sm" 
+            className="form-control" 
             id="newListName"
             placeholder="New list"
             value={this.state.listName}
