@@ -56,7 +56,7 @@ class App extends Component {
           }}/>
         </Switch>
         <footer className="footer">
-          <p>By Nicholas Cannon. <a href="https://github.com/nicholascannon1/Mello">View the Code Here!</a></p>
+          <p>By Nicholas Cannon. <a href="https://github.com/nicholascannon1/Mello" target="_blank">View the Code Here!</a></p>
         </footer>
       </div>
     );

@@ -3,9 +3,6 @@
  * /api/list
  */
 const router = require('express').Router();
-const List = require('../../models/List');
-const User = require('../../models/User');
-const Task = require('../../models/Task');
 const passport = require('passport');
 const verifyMongoId = require('../../helpers/verify').verifyMongoId;
 

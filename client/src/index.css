@@ -55,7 +55,6 @@ html, body, #root, .App {
 
 /* footer */
 .footer {
-  position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
