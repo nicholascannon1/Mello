@@ -44,13 +44,30 @@ class Task extends React.Component {
     return btnClass
   }
 
+  /**
+   * Modal Methods
+   */
+  closeTaskModal() {
+    $("#done"+this.props.id).prop('checked', this.props.done);
+    $("#taskModal"+this.props.id).modal('toggle');
+    this.setState({
+      task: this.props.task,
+      done: this.props.done
+    });
+  }
+
+  openTaskModal() {
+    $("#done"+this.props.id).prop('checked', this.props.done);
+    $("#taskModal"+this.props.id).modal('toggle');
+  }
+
   render() {
     return (
       <React.Fragment>
         <button 
           type="button" 
           className={this.getTaskClass(this.props.done)}
-          data-toggle="modal" data-target={"#taskModal"+this.props.id}>
+          onClick={this.openTaskModal.bind(this)}>
           {this.props.task}
         </button>
         <div className="modal fade" id={"taskModal"+this.props.id} tabIndex="-1" role="dialog">
@@ -58,7 +75,7 @@ class Task extends React.Component {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Edit Task</h5>
-                <button type="button" className="close" data-dismiss="modal">
+                <button type="button" className="close" onClick={this.closeTaskModal.bind(this)}>
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -75,6 +92,7 @@ class Task extends React.Component {
                     <input 
                       className="form-check-input"
                       type="checkbox"
+                      id={'done'+this.props.id}
                       value={this.state.done}
                       onChange={this.handleDoneChange.bind(this)}
                       />
