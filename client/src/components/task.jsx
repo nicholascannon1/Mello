@@ -33,12 +33,23 @@ class Task extends React.Component {
     $("#taskModal"+this.props.id).modal('toggle');
   }
 
+  /**
+   * Changes task text to green if its been completed
+   */
+  getTaskClass(done) {
+    let btnClass = 'list-group-item list-group-item-action'
+    if (done) {
+      btnClass += ' text-success';
+    }
+    return btnClass
+  }
+
   render() {
     return (
       <React.Fragment>
         <button 
           type="button" 
-          className="list-group-item list-group-item-action"
+          className={this.getTaskClass(this.props.done)}
           data-toggle="modal" data-target={"#taskModal"+this.props.id}>
           {this.props.task}
         </button>

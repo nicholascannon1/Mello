@@ -23,7 +23,7 @@ router.get('/user',
     User.findById(req.user._id)
       .populate({
         path: 'lists',
-        select: '_id tasks name',
+        select: '_id tasks name showDone',
         populate: {
           path: 'tasks',
           select: '_id task done'
@@ -58,7 +58,7 @@ router.post('/',
         if (err) return next(new Error(err));
 
         // Create projection of new list and return it
-        newList = { _id: list._id, tasks: list.tasks, name: list.name };
+        newList = { _id: list._id, tasks: list.tasks, name: list.name, showDone: list.showDone };
         res.status(200).json({ msg: 'Created new list', list: newList });
       });
     });
@@ -124,7 +124,7 @@ router.delete('/:id',
   });
 
 /**
- * Allows user to edit the name of the list. Route is protected
+ * Allows user to edit a list. Route is protected
  * and will only edit name if the user specified in the JWT
  * owns the list. Cannot set list name to empty string.
  * 
@@ -136,17 +136,17 @@ router.patch('/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     // Check for non empty string
-    if (!req.body.name || req.body.name !== '') {
+    if (!req.body.name || req.body.name !== '' || req.body.showDone !== undefined) {
       List.findOneAndUpdate({
         _id: req.params.id,
         user: req.user._id,
-      }, { name: req.body.name },
-      { new: true },
+      }, { name: req.body.name, showDone: req.body.showDone }, { new: true },
       (err, list) => {
         if (err) return next(new Error(err));
         if (!list) return sendList404(req, res);
-
-        res.status(200).json({ msg: 'Updated list name', list: list._id });
+        
+        newList = { _id: list._id, tasks: list.tasks, name: list.name, showDone: list.showDone };
+        res.status(200).json({ msg: 'Updated list', list: newList });
       });
     } else {
       res.status(403).json({ msg: 'Cannot set list name to empty string' });

@@ -34,9 +34,11 @@ export default class Home extends Component {
           id={list._id} 
           name={list.name} 
           tasks={list.tasks}
+          showDone={list.showDone}
 
           /* List Methods */
           handleDelete={ListHandler.deleteList.bind(this)}
+          handleEdit={ListHandler.editList.bind(this)}
 
           /* Task Methods */
           newTask={TaskHandler.newTask.bind(this)}

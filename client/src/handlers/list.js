@@ -47,7 +47,45 @@ function addList(listName) {
   });
 }
 
+/**
+ * Edits a list
+ */
+function editList(listId, listName, showDone) {
+  const payload = {
+    name: listName,
+    showDone: showDone
+  };
+
+  fetch(API_HOST+'/api/list/'+listId, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      'Authorization': this.props.token,
+      'content-type': 'application/json'
+    }
+  })
+  .then(res => {
+    if (res.status === 200) {
+      return res.json();
+    }
+  })
+  .then(data => {
+    const lists = JSON.parse(JSON.stringify(this.state.lists));
+    const listIndex = lists.findIndex(list => list._id === data.list._id);
+    // Don't replace the whole list object because this endpoint does not
+    // return the projected task objects.
+    lists[listIndex] = {
+      ...lists[listIndex],
+      name: data.list.name, 
+      showDone: data.list.showDone
+    };
+    this.setState({ lists: lists });
+  }); 
+}
+
+
 export { 
   deleteList,
-  addList
+  addList,
+  editList
 };
