@@ -61,20 +61,22 @@ app.use('/auth/google', require('./routes/auth/auth'));
 app.use('/api/list', require('./routes/api/lists'));
 app.use('/api/task', require('./routes/api/tasks'));
 
-/** 
- * Error Handlers
+/**
+ * Serve static assets in production mode
  */
-if (app.get('env') === 'development') {
-  app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.json({ message: err.message, err: err });
-  });
-} else {
-  // No stack traces leaked in production
-  app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.json({ message: err.message });
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.statis(path.join(__dirname, 'client/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/client/build/index.html'));
   });
 }
+
+/**
+ * Error handler
+ */
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({ message: err.message });
+});
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
