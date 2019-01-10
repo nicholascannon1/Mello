@@ -15,7 +15,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    // Get users lists ids and update the state
+    // Get users lists and update the state
     fetch(API_HOST+'/api/list/user', {
         headers: { 'Authorization': this.props.token }
       })

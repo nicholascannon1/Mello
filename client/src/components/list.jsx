@@ -126,7 +126,6 @@ class List extends React.Component {
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                   <button type="submit" className="btn btn-primary">Add Task</button>
                 </div>
               </form>
@@ -153,14 +152,14 @@ class List extends React.Component {
                     />
                   </div>
                   <div className="form-check form-check-inline">
-                  <label className="form-check-label">Show done: </label>
+                  <label className="form-check-label">Show completed: </label>
                     <input type="checkbox" id={"checkbox"+this.props.id} className="form-check-input ml-2" value={this.state.showDone}
                       onChange={this.handleShowDone.bind(this)}
                     />
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <button type="submit" className="btn btn-primary">Save changes</button>
+                  <button type="submit" className="btn btn-primary">Save list</button>
                 </div>
               </form>
             </div>

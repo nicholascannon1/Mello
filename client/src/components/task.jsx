@@ -10,6 +10,9 @@ class Task extends React.Component {
     };
   }
 
+  /**
+   * Form methods 
+   */
   handleTaskChange(e) {
     this.setState({ ...this.state, task: e.target.value });
   }
