@@ -11,6 +11,7 @@ const socketio = require('socket.io');
 const http = require('http');
 const session = require('express-session');
 const cors = require('cors');
+const path = require('path');
 
 /**
  * Project imports
@@ -65,7 +66,7 @@ app.use('/api/task', require('./routes/api/tasks'));
  * Serve static assets in production mode
  */
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.statis(path.join(__dirname, 'client/build')));
+  app.use(express.static(path.join(__dirname, '/client/build')));
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/client/build/index.html'));
   });
