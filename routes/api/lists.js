@@ -49,7 +49,6 @@ router.get('/user',
 router.post('/',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
-    console.log(req.body);
     List.create({
       name: req.body.name,
       user: req.user._id,

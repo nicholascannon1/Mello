@@ -8,7 +8,7 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      disabled: '',
+      disabled: ''
     };
     socket = io(API_HOST);
   }
@@ -28,19 +28,22 @@ export default class Login extends Component {
       const { popup } = this;
       if (!popup || popup.closed || popup.closed === undefined) {
         clearInterval(check);
-        this.setState({ disabled: ''});
+        this.setState({ disabled: '' });
       }
     }, 1000);
-  } 
+  }
 
   // Launches pop up window
   openPopup() {
-    const width = 600, height = 600;
-    const left = (window.innerWidth / 2) - (width / 2);
-    const top = (window.innerHeight / 2) - (height / 2);
+    const width = 600,
+      height = 600;
+    const left = window.innerWidth / 2 - width / 2;
+    const top = window.innerHeight / 2 - height / 2;
     const url = `${API_HOST}/auth/google?socketId=${socket.id}`;
 
-    return window.open(url, '',       
+    return window.open(
+      url,
+      '',
       `toolbar=no, location=no, directories=no, status=no, menubar=no, 
       scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
       height=${height}, top=${top}, left=${left}`
@@ -62,14 +65,15 @@ export default class Login extends Component {
       <div id="loginPage">
         <div className="text-center">
           <h1 id="bigBrand">Mello</h1>
-          <button 
+          <button
             id="loginWithGoogle"
             onClick={this.startAuth.bind(this)}
-            className={"btn" + this.state.disabled}>
+            className={'btn' + this.state.disabled}
+          >
             Login with Google
           </button>
         </div>
       </div>
-    )
+    );
   }
 }

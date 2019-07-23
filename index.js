@@ -1,6 +1,6 @@
 /**
  * index.js
- * 
+ *
  * Server entry point.
  */
 const express = require('express');
@@ -11,7 +11,6 @@ const socketio = require('socket.io');
 const http = require('http');
 const session = require('express-session');
 const cors = require('cors');
-const path = require('path');
 
 /**
  * Project imports
@@ -23,7 +22,7 @@ const secret = require('./config/globals').secret;
 const app = express();
 const port = 8000;
 
-/** 
+/**
  * Database set up
  */
 db.connect();
@@ -41,11 +40,13 @@ app.use(helmet());
 app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  secret: secret,
-  resave: true, 
-  saveUninitialized: true
-}));
+app.use(
+  session({
+    secret: secret,
+    resave: true,
+    saveUninitialized: true
+  })
+);
 app.use(cors());
 
 /**
@@ -56,21 +57,14 @@ const io = socketio(server);
 app.set('io', io);
 
 /**
- * Mount API routes 
+ * Mount API routes
  */
 app.use('/auth/google', require('./routes/auth/auth'));
 app.use('/api/list', require('./routes/api/lists'));
 app.use('/api/task', require('./routes/api/tasks'));
-
-/**
- * Serve static assets in production mode
- */
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '/client/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/client/build/index.html'));
-  });
-}
+app.get('/', (req, res) => {
+  return res.json({ msg: 'Mello V2 API' });
+});
 
 /**
  * Error handler

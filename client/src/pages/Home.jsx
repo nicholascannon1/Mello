@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import { API_HOST } from '../config';
+import React, { Component } from 'react';
 import List from '../components/List';
 import NewList from '../components/NewList';
 import * as ListHandler from '../handlers/list';
@@ -11,14 +10,14 @@ export default class Home extends Component {
 
     this.state = {
       lists: []
-    }
+    };
   }
 
   componentDidMount() {
     // Get users lists and update the state
-    fetch(API_HOST+'/api/list/user', {
-        headers: { 'Authorization': this.props.token }
-      })
+    fetch('/api/list/user', {
+      headers: { Authorization: this.props.token }
+    })
       .then(res => res.json())
       .then(data => {
         this.setState({ lists: data.lists });
@@ -28,18 +27,16 @@ export default class Home extends Component {
   render() {
     const lists = this.state.lists.map(list => {
       return (
-        <List 
+        <List
           /* List Object attributes */
-          key={list._id} 
-          id={list._id} 
-          name={list.name} 
+          key={list._id}
+          id={list._id}
+          name={list.name}
           tasks={list.tasks}
           showDone={list.showDone}
-
           /* List Methods */
           handleDelete={ListHandler.deleteList.bind(this)}
           handleEdit={ListHandler.editList.bind(this)}
-
           /* Task Methods */
           newTask={TaskHandler.newTask.bind(this)}
           editTask={TaskHandler.editTask.bind(this)}
@@ -55,6 +52,6 @@ export default class Home extends Component {
           <NewList addList={ListHandler.addList.bind(this)} />
         </div>
       </div>
-    )
+    );
   }
 }
