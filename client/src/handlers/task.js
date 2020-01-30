@@ -1,6 +1,7 @@
 /**
  * Contains all handling functions for Task objects
  */
+import {API_HOST} from '../config';
 
 /**
  * Adds new task to list
@@ -11,7 +12,7 @@ function newTask(task, listId) {
     listId: listId
   };
 
-  fetch('/api/task', {
+  fetch(API_HOST + '/api/task', {
     method: 'POST',
     body: JSON.stringify(payload),
     headers: {
@@ -29,12 +30,12 @@ function newTask(task, listId) {
       const lists = JSON.parse(JSON.stringify(this.state.lists));
       const listIndex = lists.findIndex(list => list._id === listId);
       lists[listIndex].tasks.push(data.task);
-      this.setState({ lists: lists });
+      this.setState({lists: lists});
     });
 }
 
 function deleteTask(id) {
-  fetch('/api/task/' + id, {
+  fetch(API_HOST + '/api/task/' + id, {
     method: 'DELETE',
     headers: {
       Authorization: this.props.token
@@ -48,10 +49,8 @@ function deleteTask(id) {
     .then(data => {
       const lists = JSON.parse(JSON.stringify(this.state.lists));
       const listId = lists.findIndex(list => list._id === data.listId);
-      lists[listId].tasks = lists[listId].tasks.filter(
-        task => task._id !== data.taskId
-      );
-      this.setState({ lists: lists });
+      lists[listId].tasks = lists[listId].tasks.filter(task => task._id !== data.taskId);
+      this.setState({lists: lists});
     });
 }
 
@@ -61,7 +60,7 @@ function editTask(id, task, done) {
     done: done
   };
 
-  fetch('/api/task/' + id, {
+  fetch(API_HOST + '/api/task/' + id, {
     headers: {
       Authorization: this.props.token,
       'content-type': 'application/json'
@@ -77,12 +76,10 @@ function editTask(id, task, done) {
     .then(data => {
       const lists = JSON.parse(JSON.stringify(this.state.lists));
       const listIndex = lists.findIndex(list => list._id === data.listId);
-      const taskIndex = lists[listIndex].tasks.findIndex(
-        task => task._id === id
-      );
-      lists[listIndex].tasks[taskIndex] = { ...data.task };
-      this.setState({ lists: lists });
+      const taskIndex = lists[listIndex].tasks.findIndex(task => task._id === id);
+      lists[listIndex].tasks[taskIndex] = {...data.task};
+      this.setState({lists: lists});
     });
 }
 
-export { newTask, editTask, deleteTask };
+export {newTask, editTask, deleteTask};

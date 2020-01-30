@@ -2,13 +2,14 @@
  * Contains all handling functions for dealing with
  * List objects.
  */
+import {API_HOST} from '../config';
 
 /**
  * Deletes a list by ID.
  */
 function deleteList(id) {
-  fetch('/api/list/' + id, {
-    headers: { Authorization: this.props.token },
+  fetch(API_HOST + '/api/list/' + id, {
+    headers: {Authorization: this.props.token},
     method: 'DELETE'
   }).then(res => {
     if (res.status === 200) {
@@ -23,9 +24,9 @@ function deleteList(id) {
  * Adds new list with name
  */
 function addList(listName) {
-  const payload = { name: listName };
+  const payload = {name: listName};
 
-  fetch('/api/list/', {
+  fetch(API_HOST + '/api/list/', {
     method: 'POST',
     body: JSON.stringify(payload),
     headers: {
@@ -41,7 +42,7 @@ function addList(listName) {
     .then(data => {
       // Add new list to existing array of lists
       const newLists = this.state.lists.concat([data.list]);
-      this.setState({ lists: newLists });
+      this.setState({lists: newLists});
     });
 }
 
@@ -54,7 +55,7 @@ function editList(listId, listName, showDone) {
     showDone: showDone
   };
 
-  fetch('/api/list/' + listId, {
+  fetch(API_HOST + '/api/list/' + listId, {
     method: 'PATCH',
     body: JSON.stringify(payload),
     headers: {
@@ -77,8 +78,8 @@ function editList(listId, listName, showDone) {
         name: data.list.name,
         showDone: data.list.showDone
       };
-      this.setState({ lists: lists });
+      this.setState({lists: lists});
     });
 }
 
-export { deleteList, addList, editList };
+export {deleteList, addList, editList};

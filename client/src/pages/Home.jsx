@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import List from '../components/List';
 import NewList from '../components/NewList';
 import * as ListHandler from '../handlers/list';
 import * as TaskHandler from '../handlers/task';
+import {API_HOST} from '../config';
 
 export default class Home extends Component {
   constructor(props) {
@@ -15,12 +16,12 @@ export default class Home extends Component {
 
   componentDidMount() {
     // Get users lists and update the state
-    fetch('/api/list/user', {
-      headers: { Authorization: this.props.token }
+    fetch(API_HOST + '/api/list/user', {
+      headers: {Authorization: this.props.token}
     })
       .then(res => res.json())
       .then(data => {
-        this.setState({ lists: data.lists });
+        this.setState({lists: data.lists});
       });
   }
 

@@ -1,14 +1,22 @@
-# Mello Frontend container
-FROM mellowebbase:latest
+# Mello Web Container
 
-COPY . /app
+# **BUILD STAGE**
+FROM node:latest as builder
+
 WORKDIR /app
+COPY package*.json ./
+RUN npm ci --silent
 
-RUN npm install
+COPY . .
+
+ENV SKIP_PREFLIGHT_CHECK=true
+ENV API_HOST=https://www.api.mello.niccannon.com
 RUN npm run build
 
-COPY ./default.conf /etc/nginx/conf.d
+# **CONTAINER STAGE**
+FROM nginx:alpine
 
-EXPOSE 80
-# turn daemon off to allow docker to track process
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from=builder /app/build /srv/www
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 8080

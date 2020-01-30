@@ -11,6 +11,9 @@ const socketio = require('socket.io');
 const http = require('http');
 const session = require('express-session');
 const cors = require('cors');
+const dotenv = require('dotenv');
+
+if (process.env.NODE_ENV === 'production') dotenv.config({path: '.env'});
 
 /**
  * Project imports
@@ -39,7 +42,7 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(passport.initialize());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(
   session({
     secret: secret,
@@ -63,7 +66,7 @@ app.use('/auth/google', require('./routes/auth/auth'));
 app.use('/api/list', require('./routes/api/lists'));
 app.use('/api/task', require('./routes/api/tasks'));
 app.get('/', (req, res) => {
-  return res.json({ msg: 'Mello V2 API' });
+  return res.json({msg: 'Mello V2 API'});
 });
 
 /**
@@ -71,7 +74,7 @@ app.get('/', (req, res) => {
  */
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.json({ message: err.message });
+  res.json({message: err.message});
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
