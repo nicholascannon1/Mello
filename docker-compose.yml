@@ -2,26 +2,65 @@ version: '3.7'
 services:
   web:
     image: repo.treescale.com/nicholascannon1/mello/mello-web:latest
+    container_name: mello-web
     restart: always
-    labels:
-      # Traefik config
-      - traefik.http.routers.web.rule=Host(`mello.niccannon.com`)
-      - traefik.enabled=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - web
     depends_on:
       - api
+    labels:
+      # Traefik config
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.mello-web.entrypoints=http'
+      - 'traefik.http.routers.mello-web.rule=Host(`mello.niccannon.com`)'
+      - 'traefik.http.routers.mello-web.rule=Host(`www.mello.niccannon.com`)'
+      - 'traefik.http.middlewares.mello-web-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.mello-web.middlewares=mello-web-https-redirect'
+      - 'traefik.http.routers.mello-web-secure.entrypoints=https'
+      - 'traefik.http.routers.mello-web-secure.rule=Host(`mello.niccannon.com`)'
+      - 'traefik.http.routers.mello-web-secure.rule=Host(`www.mello.niccannon.com`)'
+      - 'traefik.http.routers.mello-web-secure.tls=true'
+      - 'traefik.http.routers.mello-web-secure.tls.certresolver=http'
+      - 'traefik.http.routers.mello-web-secure.service=mello-web'
+      - 'traefik.http.services.mello-web.loadbalancer.server.port=8080'
+      - 'traefik.docker.network=web'
 
   api:
     image: repo.treescale.com/nicholascannon1/mello/mello-api:latest
+    container_name: mello-api
     restart: always
-    labels:
-      # Traefik config
-      - traefik.http.routers.web.rule=Host(`api.mello.niccannon.com`)
-      - traefik.enabled=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     env_file: .env
     networks:
-      db_net: {}
+      - db_net
+      - web
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      # Traefik config
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.mello-api.entrypoints=http'
+      - 'traefik.http.routers.mello-api.rule=Host(`api.mello.niccannon.com`)'
+      - 'traefik.http.routers.mello-api.rule=Host(`www.api.mello.niccannon.com`)'
+      - 'traefik.http.middlewares.mello-api-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.mello-api.middlewares=mello-api-https-redirect'
+      - 'traefik.http.routers.mello-api-secure.entrypoints=https'
+      - 'traefik.http.routers.mello-api-secure.rule=Host(`api.mello.niccannon.com`)'
+      - 'traefik.http.routers.mello-api-secure.rule=Host(`www.api.mello.niccannon.com`)'
+      - 'traefik.http.routers.mello-api-secure.tls=true'
+      - 'traefik.http.routers.mello-api-secure.tls.certresolver=http'
+      - 'traefik.http.routers.mello-api-secure.service=mello-api'
+      - 'traefik.http.services.mello-api.loadbalancer.server.port=8000'
+      - 'traefik.docker.network=web'
 
 networks:
+  web:
+    external: true
   db_net:
     external: true
     name: mongodb-network
