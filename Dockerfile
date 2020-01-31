@@ -1,5 +1,5 @@
 # Mello API Backend Container
-FROM node:latest
+FROM node:alpine
 
 WORKDIR /app
 

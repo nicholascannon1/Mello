@@ -10,6 +10,7 @@ const passport = require('passport');
 const socketio = require('socket.io');
 const http = require('http');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
 const dotenv = require('dotenv');
 
@@ -28,7 +29,7 @@ const port = 8000;
 /**
  * Database set up
  */
-db.connect();
+const mongoose = db.connect();
 
 /**
  * Authentication set up
@@ -47,7 +48,13 @@ app.use(
   session({
     secret: secret,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store:
+      process.env.NODE_ENV === 'production'
+        ? MongoStore({
+            mongooseConnection: mongoose.connection
+          })
+        : session.MemoryStore()
   })
 );
 app.use(cors());
