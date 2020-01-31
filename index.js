@@ -51,7 +51,7 @@ app.use(
     saveUninitialized: true,
     store:
       process.env.NODE_ENV === 'production'
-        ? MongoStore({
+        ? new MongoStore({
             mongooseConnection: mongoose.connection
           })
         : session.MemoryStore()
