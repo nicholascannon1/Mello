@@ -10,7 +10,6 @@ RUN npm ci --silent
 COPY . .
 
 ENV SKIP_PREFLIGHT_CHECK=true
-ENV API_HOST=https://www.api.mello.niccannon.com
 RUN npm run build
 
 # **CONTAINER STAGE**

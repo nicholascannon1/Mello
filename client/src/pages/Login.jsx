@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import io from 'socket.io-client';
-import { API_HOST } from '../config';
+import {API_HOST} from '../config';
 
 var socket;
 
@@ -25,10 +25,10 @@ export default class Login extends Component {
   // Check if popup window is still open
   checkPopup() {
     const check = setInterval(() => {
-      const { popup } = this;
+      const {popup} = this;
       if (!popup || popup.closed || popup.closed === undefined) {
         clearInterval(check);
-        this.setState({ disabled: '' });
+        this.setState({disabled: ''});
       }
     }, 1000);
   }
@@ -44,8 +44,8 @@ export default class Login extends Component {
     return window.open(
       url,
       '',
-      `toolbar=no, location=no, directories=no, status=no, menubar=no, 
-      scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
+      `toolbar=no, location=no, directories=no, status=no, menubar=no,
+      scrollbars=no, resizable=no, copyhistory=no, width=${width},
       height=${height}, top=${top}, left=${left}`
     );
   }
@@ -56,7 +56,7 @@ export default class Login extends Component {
       e.preventDefault();
       this.popup = this.openPopup();
       this.checkPopup();
-      this.setState({ disabled: 'disabled' });
+      this.setState({disabled: 'disabled'});
     }
   }
 
@@ -68,8 +68,7 @@ export default class Login extends Component {
           <button
             id="loginWithGoogle"
             onClick={this.startAuth.bind(this)}
-            className={'btn' + this.state.disabled}
-          >
+            className={'btn' + this.state.disabled}>
             Login with Google
           </button>
         </div>
