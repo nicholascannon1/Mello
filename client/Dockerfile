@@ -10,7 +10,6 @@ RUN npm ci --silent
 COPY . .
 
 ENV SKIP_PREFLIGHT_CHECK=true
-ENV NODE_ENV=production
 RUN npm run build
 
 # **CONTAINER STAGE**

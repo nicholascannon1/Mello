@@ -5,14 +5,12 @@
 
 module.exports = {
   google: {
-    // OAuth client values from developer console 
-    'clientId': '',
-    'clientSecret': '',
-    'callbackUrl': ''
+    clientId: '',
+    clientSecret: '',
+    callbackUrl: process.env.NODE_ENV === 'production' ? '' : ''
   },
   database: {
-    'URL': ''
+    URL: process.env.DB_URI ? process.env.DB_URI : ''
   },
-  secret: '',
-  ClientURL: ''
-}
+  secret: ''
+};
