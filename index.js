@@ -45,17 +45,17 @@ app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(
-  session({
-    secret: secret,
-    resave: true,
-    saveUninitialized: true,
-    store:
-      process.env.NODE_ENV === 'production'
-        ? new MongoStore({
-            mongooseConnection: mongoose.connection
-          })
-        : session.MemoryStore()
-  })
+	session({
+		secret: secret,
+		resave: true,
+		saveUninitialized: true,
+		store:
+			process.env.NODE_ENV === 'production'
+				? new MongoStore({
+						mongooseConnection: mongoose.connection
+				  })
+				: session.MemoryStore()
+	})
 );
 app.use(cors());
 
@@ -72,16 +72,25 @@ app.set('io', io);
 app.use('/auth/google', require('./routes/auth/auth'));
 app.use('/api/list', require('./routes/api/lists'));
 app.use('/api/task', require('./routes/api/tasks'));
-app.get('/', (req, res) => {
-  return res.json({msg: 'Mello V2 API'});
+
+/* Health check endpoint */
+app.get('/api/health', (req, res) => {
+	// get memory usage in MB
+	const memUsage = process.memoryUsage();
+	const memStats = {};
+	for (let key in memUsage) {
+		memStats[key] = Math.round((memUsage[key] / 1024 / 1024) * 100) / 100;
+	}
+
+	res.status(200).json(memStats);
 });
 
 /**
  * Error handler
  */
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.json({message: err.message});
+	res.status(err.status || 500);
+	res.json({message: err.message});
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
