@@ -1,8 +1,9 @@
 # Mello: a simple Trello clone
 
-![home](https://i.imgur.com/faqVqs2.png)
+![home](imgs/home.png)
 
 **Goals**
+
 - Build a web application using Google OAuth
 - Clone the basic features of Trello (multiple named todo lists)
 - Create a CI/CD deployment with docker and docker-compose
@@ -11,20 +12,20 @@
 
 - OAuth with Google!
 
-![oauth](https://i.imgur.com/gNZ9VOm.png)
+![oauth](imgs/oauth.png)
 
 - Create multiple lists
 
-![list](https://i.imgur.com/bPJPbWC.png)
+![list](imgs/lists.png)
 
 - Edit list settings
 
-![list_settings](https://i.imgur.com/POE4OhR.png)
+![list_settings](imgs/list_settings.png)
 
 - Add tasks
 
-![new_task](https://i.imgur.com/jOU5IDT.png)
+![new_task](imgs/add_tasks.png)
 
 - Edit / Delete tasks
 
-![edit_delete_task](https://i.imgur.com/sEt1G3L.png)
+![edit_delete_task](imgs/edit_tasks.png)
